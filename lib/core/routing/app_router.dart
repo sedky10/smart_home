@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smart_home/core/helper/service_locator.dart';
+import 'package:smart_home/core/networking/firebase_services.dart';
 import 'package:smart_home/core/routing/app_routes.dart';
 import 'package:smart_home/features/Login/presentation/views/login_view.dart';
 import 'package:smart_home/features/Login/presentation/views/login_confirmation.dart';
+import 'package:smart_home/features/Register/presentation/manager/register/register_user_cubit.dart';
 import 'package:smart_home/features/Register/presentation/views/register_view.dart';
 import 'package:smart_home/features/navigation/presentation/manager/cubit/navigation_cubit.dart';
 import 'package:smart_home/features/navigation/presentation/views/navigation_view.dart';
@@ -21,8 +23,10 @@ abstract class AppRouter {
       ),
       GoRoute(
         path: AppRoutes.kRegisterView,
-        builder: (BuildContext context, GoRouterState state) =>
-            const RegisterView(),
+        builder: (BuildContext context, GoRouterState state) => BlocProvider(
+          create: (context) => RegisterUserCubit(getIt<FirebaseServices>()),
+          child: const RegisterView(),
+        ),
       ),
       GoRoute(
         path: AppRoutes.kLoginView,
@@ -36,14 +40,16 @@ abstract class AppRouter {
       ),
       GoRoute(
         path: AppRoutes.kNavigationView,
-        builder: (BuildContext context, GoRouterState state) => BlocProvider<NavigationCubit>(
+        builder: (BuildContext context, GoRouterState state) =>
+            BlocProvider<NavigationCubit>(
           create: (context) => getIt<NavigationCubit>(),
           child: const NavigationView(),
         ),
       ),
       GoRoute(
         path: AppRoutes.kRoomDetailsView,
-        builder: (BuildContext context, GoRouterState state) => const RoomDetailsView(),
+        builder: (BuildContext context, GoRouterState state) =>
+            const RoomDetailsView(),
       ),
     ],
   );

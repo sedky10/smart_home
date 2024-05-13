@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smart_home/core/routing/app_routes.dart';
 import 'package:smart_home/core/utils/color_styles.dart';
 import 'package:smart_home/core/utils/text%20styles/text_styles.dart';
 import 'package:smart_home/core/widgets/custome_button.dart';
-import 'package:smart_home/features/Register/presentation/views/widgets/register_dialoge.dart';
+import 'package:smart_home/features/Register/presentation/manager/register/register_user_cubit.dart';
 
 class Registeritem extends StatelessWidget {
   const Registeritem({super.key});
@@ -18,10 +19,7 @@ class Registeritem extends StatelessWidget {
           title: 'Sign Up',
           buttonmainColor: ColorStyles.darkGrey,
           onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => const RegisterDialoge(),
-            );
+            BlocProvider.of<RegisterUserCubit>(context).registerUser();
           },
         ),
         SizedBox(

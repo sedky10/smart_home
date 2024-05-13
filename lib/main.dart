@@ -6,12 +6,12 @@ import 'package:smart_home/core/routing/app_router.dart';
 import 'package:smart_home/core/utils/app_theme.dart';
 import 'package:smart_home/firebase_options.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setup();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-);
+  );
+  setup();
   runApp(const SmartHome());
 }
 

@@ -1,4 +1,5 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 const String appName = 'Smart Home';
- double padding = 20.w;
+const String userCollection = 'users';
+double padding = 20.w;

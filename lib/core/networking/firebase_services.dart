@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:smart_home/core/helper/constants.dart';
 
 class FirebaseServices {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -47,7 +48,7 @@ class FirebaseServices {
 
   Future addUserData(String firstName, String lastName) async {
     try {
-      await _firestore.collection('users').add({
+      await _firestore.collection(userCollection).add({
         'firstName': firstName,
         'lastName': lastName,
       });
