@@ -16,5 +16,6 @@ ThemeData theme = ThemeData(
     ),
   ),
   fontFamily: "poppins",
+
   useMaterial3: true,
 );

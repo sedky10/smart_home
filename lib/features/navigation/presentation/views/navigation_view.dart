@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:smart_home/core/utils/color_styles.dart';
 import 'package:smart_home/core/utils/text%20styles/text_styles.dart';
+import 'package:smart_home/features/account/presentation/manager/profile%20data/profile_data_cubit.dart';
 import 'package:smart_home/features/account/presentation/views/account_view.dart';
 import 'package:smart_home/features/home/presentation/views/home_view.dart';
 import 'package:smart_home/features/navigation/presentation/manager/cubit/navigation_cubit.dart';
@@ -25,19 +26,19 @@ class _NavigationViewState extends State<NavigationView> {
       {'page': const RoomsView(), 'title': 'Rooms'},
       {'page': const AccountView(), 'title': 'Profile'},
     ];
+    BlocProvider.of<ProfileDataCubit>(context).getProfileData();
+
     super.initState();
   }
 
-  DateTime? lastBackPressed;
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<NavigationCubit, NavigationState>(
       builder: (context, state) {
         return Scaffold(
           backgroundColor: ColorStyles.blackLight,
-          
           appBar: AppBar(
-             surfaceTintColor: Colors.transparent,
+            surfaceTintColor: Colors.transparent,
             elevation: 0,
             backgroundColor: ColorStyles.blackLight,
             leading: const SizedBox(),
@@ -63,13 +64,15 @@ class _NavigationViewState extends State<NavigationView> {
               unselectedItemColor: ColorStyles.grey.withOpacity(.5),
               selectedLabelStyle: TextStyles.font12GreyBold,
               unselectedLabelStyle: TextStyles.font12GreyBold,
-              currentIndex:
-                  BlocProvider.of<NavigationCubit>(context).selectedIndex,
+              currentIndex: state is NavigationInitial
+                  ? 0
+                  : BlocProvider.of<NavigationCubit>(context).selectedIndex,
               onTap: (index) {
+                BlocProvider.of<ProfileDataCubit>(context).getProfileData();
                 BlocProvider.of<NavigationCubit>(context)
                     .updateSelectedIndex(index);
               },
-               items: [
+              items: [
                 BottomNavigationBarItem(
                   label: 'home',
                   icon: Padding(

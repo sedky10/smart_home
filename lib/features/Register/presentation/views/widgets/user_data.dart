@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_home/core/helper/validators.dart';
 import 'package:smart_home/core/utils/color_styles.dart';
 import 'package:smart_home/core/widgets/custom_text_field.dart';
+import 'package:smart_home/features/Register/presentation/manager/password%20confirm/password_confirm_cubit.dart';
+import 'package:smart_home/features/Register/presentation/manager/password%20eye/password_eye_cubit.dart';
 import 'package:smart_home/features/Register/presentation/manager/register/register_user_cubit.dart';
 
 class UserData extends StatelessWidget {
@@ -71,33 +73,80 @@ class UserData extends StatelessWidget {
             height: 20.h,
           ),
           CustomTextField(
+            validator: (val) {
+              return validatePhoneNumber(val!);
+            },
             fillColor: ColorStyles.darkGrey,
             focusedBorderColor: ColorStyles.darkGrey,
-            hintText: 'Password',
-            validator: (val) {
-              return validatePassword(val!);
-            },
-            controller: context.read<RegisterUserCubit>().passwordController,
+            hintText: 'Phone Number',
+            controller: context.read<RegisterUserCubit>().phoneNumberController,
             textInputAction: TextInputAction.next,
             keyboardType: TextInputType.number,
           ),
           SizedBox(
             height: 20.h,
           ),
-          CustomTextField(
-            fillColor: ColorStyles.darkGrey,
-            focusedBorderColor: ColorStyles.darkGrey,
-            hintText: ' Confirm Password',
-            validator: (val) {
-              return validatePassword(val!);
+          BlocBuilder<PasswordEyeCubit, PasswordEyeState>(
+            builder: (context, state) {
+              return CustomTextField(
+                fillColor: ColorStyles.darkGrey,
+                focusedBorderColor: ColorStyles.darkGrey,
+                hintText: 'Password',
+                validator: (val) {
+                  return validatePassword(val!);
+                },
+                obscureText: context.read<PasswordEyeCubit>().visible,
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    context.read<PasswordEyeCubit>().changeVisibility();
+                  },
+                  icon: Icon(
+                    context.read<PasswordEyeCubit>().visible
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                    color: ColorStyles.grey,
+                  ),
+                ),
+                controller:
+                    context.read<RegisterUserCubit>().passwordController,
+                textInputAction: TextInputAction.next,
+                keyboardType: TextInputType.number,
+              );
             },
-            controller:
-                context.read<RegisterUserCubit>().confirmPasswordController,
-            textInputAction: TextInputAction.next,
-            keyboardType: TextInputType.number,
           ),
           SizedBox(
-            height: 80.h,
+            height: 20.h,
+          ),
+          BlocBuilder<PasswordConfirmCubit, PasswordConfirmState>(
+            builder: (context, state) {
+              return CustomTextField(
+                fillColor: ColorStyles.darkGrey,
+                focusedBorderColor: ColorStyles.darkGrey,
+                hintText: ' Confirm Password',
+                obscureText: context.read<PasswordConfirmCubit>().visible,
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    context.read<PasswordConfirmCubit>().changeVisibility();
+                  },
+                  icon: Icon(
+                    context.read<PasswordConfirmCubit>().visible
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                    color: ColorStyles.grey,
+                  ),
+                ),
+                validator: (val) {
+                  return validatePassword(val!);
+                },
+                controller:
+                    context.read<RegisterUserCubit>().confirmPasswordController,
+                textInputAction: TextInputAction.next,
+                keyboardType: TextInputType.number,
+              );
+            },
+          ),
+          SizedBox(
+            height: 40.h,
           ),
         ],
       ),

@@ -8,5 +8,6 @@ sealed class NavigationState extends Equatable {
 }
 
 final class NavigationInitial extends NavigationState {}
+final class NavigationLoading extends NavigationState {}
 
 final class NavigationPages extends NavigationState {}

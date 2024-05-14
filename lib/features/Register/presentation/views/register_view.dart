@@ -7,9 +7,9 @@ import 'package:smart_home/core/helper/image_assets.dart';
 import 'package:smart_home/core/utils/color_styles.dart';
 import 'package:smart_home/features/Register/presentation/manager/register/register_user_cubit.dart';
 import 'package:smart_home/features/Register/presentation/views/widgets/head_view.dart';
-import 'package:smart_home/features/Register/presentation/views/widgets/register_dialoge.dart';
 import 'package:smart_home/features/Register/presentation/views/widgets/register_item.dart';
 import 'package:smart_home/features/Register/presentation/views/widgets/user_data.dart';
+import 'package:smart_home/features/Register/presentation/views/widgets/verify_email_dialoge.dart';
 
 class RegisterView extends StatelessWidget {
   const RegisterView({super.key});
@@ -19,16 +19,18 @@ class RegisterView extends StatelessWidget {
     return BlocConsumer<RegisterUserCubit, RegisterUserState>(
       listener: (context, state) {
         if (state is RegisterUserSuccess) {
-          showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (context) => const RegisterDialoge(),
-          );
           showToast('Account created successfully');
         } else if (state is RegisterUserFailed) {
           showToast('failed');
         } else if (state is RegisterUserLoading) {
           const CircularProgressIndicator();
+        } else if (state is RegisterUserVerify) {
+          showToast('Please Verify your email');
+          showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (context) => const VerifyEmailDialoge(),
+          );
         }
       },
       builder: (context, state) {
@@ -47,6 +49,7 @@ class RegisterView extends StatelessWidget {
                   children: [
                     ImageItem(
                       image: ImagesAssets.registerImage,
+                      title: 'Welcom, Register Your Account and Enjoy our Services Now!',
                     ),
                     UserData(),
                     Registeritem(),

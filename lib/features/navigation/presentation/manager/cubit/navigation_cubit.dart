@@ -12,7 +12,7 @@ class NavigationCubit extends Cubit<NavigationState> {
   updateSelectedIndex(
     int index,
   ) {
-    emit(NavigationInitial());
+    emit(NavigationLoading());
     _selectedindex = index;
 
     emit(NavigationPages());

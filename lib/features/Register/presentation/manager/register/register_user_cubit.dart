@@ -15,6 +15,7 @@ class RegisterUserCubit extends Cubit<RegisterUserState> {
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   void registerUser() async {
@@ -25,8 +26,16 @@ class RegisterUserCubit extends Cubit<RegisterUserState> {
           await _firebaseServices.signUp(
               emailController.text, passwordController.text);
           await _firebaseServices.addUserData(
-              firstNameController.text, lastNameController.text);
-          emit(RegisterUserSuccess());
+            firstNameController.text,
+            lastNameController.text,
+            phoneNumberController.text,
+            emailController.text,
+          );
+          await _firebaseServices.verifieyregisterEmail();
+
+          await _firebaseServices.checkVerifiedEmail()
+              ? emit(RegisterUserSuccess())
+              : emit(RegisterUserVerify());
         } catch (e) {
           emit(RegisterUserFailed());
         }
@@ -45,5 +54,6 @@ class RegisterUserCubit extends Cubit<RegisterUserState> {
     confirmPasswordController.dispose();
     firstNameController.dispose();
     lastNameController.dispose();
+    phoneNumberController.dispose();
   }
 }

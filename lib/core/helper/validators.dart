@@ -47,6 +47,31 @@ String? validateEmail(String value) {
   return null;
 }
 
+String? validateEmailOrphoneNumber(String value) {
+  if (value.isEmpty) {
+    showToast(
+      'email or phone number can not be empty',
+    );
+    return 'email or phone number can not be empty';
+  } else if (value.isNotEmpty) {
+    if (RegExp(r'^(002)?01[0125][0-9]{8}$').hasMatch(value)) {
+      return null;
+    } else if (!RegExp(r'^(002)?01[0125][0-9]{8}$').hasMatch(value)) {
+      if (RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+        return null;
+      } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+        showToast(
+          'please enter a valid email or phone number',
+        );
+        return 'please enter a valid email or phone number';
+      }
+      return 'phone number can not be empty';
+    }
+  }
+
+  return null;
+}
+
 String? validatePhoneNumber(String value) {
   if (value.isEmpty) {
     showToast(

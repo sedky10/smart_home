@@ -11,3 +11,4 @@ final class RegisterUserInitial extends RegisterUserState {}
 final class RegisterUserLoading extends RegisterUserState {}
 final class RegisterUserFailed extends RegisterUserState {}
 final class RegisterUserSuccess extends RegisterUserState {}
+final class RegisterUserVerify extends RegisterUserState {}

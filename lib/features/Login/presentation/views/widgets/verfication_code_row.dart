@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_home/features/Login/presentation/manager/login%20confirmation/login_confirm_user_cubit.dart';
 import 'package:smart_home/features/Login/presentation/views/widgets/custom_otp_text_form.dart';
 
 class VerificationCodeRow extends StatelessWidget {
@@ -6,31 +8,32 @@ class VerificationCodeRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController otpController1 = TextEditingController();
-    TextEditingController otpController2 = TextEditingController();
-    TextEditingController otpController3 = TextEditingController();
-    TextEditingController otpController4 = TextEditingController();
-    TextEditingController otpController5 = TextEditingController();
-    TextEditingController otpController6 = TextEditingController();
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        OtpTextFormField(
-            controller: otpController1, havePrevious: false, autoFocus: true),
-        OtpTextFormField(
-          controller: otpController2,
-        ),
-        OtpTextFormField(
-          controller: otpController3,
-        ),
-        OtpTextFormField(
-          controller: otpController4,
-        ),
-        OtpTextFormField(
-          controller: otpController5,
-        ),
-        OtpTextFormField(controller: otpController6, haveNext: false),
-      ],
+    return Form(
+      key: context.read<ConfirmLoginUserCubit>().formKey,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          OtpTextFormField(
+              controller: context.read<ConfirmLoginUserCubit>().otpController1,
+              havePrevious: false,
+              autoFocus: true),
+          OtpTextFormField(
+            controller: context.read<ConfirmLoginUserCubit>().otpController2,
+          ),
+          OtpTextFormField(
+            controller: context.read<ConfirmLoginUserCubit>().otpController3,
+          ),
+          OtpTextFormField(
+            controller: context.read<ConfirmLoginUserCubit>().otpController4,
+          ),
+          OtpTextFormField(
+            controller: context.read<ConfirmLoginUserCubit>().otpController5,
+          ),
+          OtpTextFormField(
+              controller: context.read<ConfirmLoginUserCubit>().otpController6,
+              haveNext: false),
+        ],
+      ),
     );
   }
 }
