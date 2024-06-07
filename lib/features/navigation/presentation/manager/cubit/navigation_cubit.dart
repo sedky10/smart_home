@@ -6,16 +6,24 @@ part 'navigation_state.dart';
 class NavigationCubit extends Cubit<NavigationState> {
   NavigationCubit() : super(NavigationInitial());
   int _selectedindex = 0;
- 
+
   int get selectedIndex => _selectedindex;
- 
+
   updateSelectedIndex(
     int index,
   ) {
     emit(NavigationLoading());
+
     _selectedindex = index;
 
     emit(NavigationPages());
   }
+
+  int closed() {
+    if (isClosed) {
+      return 0;
+    } else {
+      return _selectedindex;
+    }
+  }
 }
- 

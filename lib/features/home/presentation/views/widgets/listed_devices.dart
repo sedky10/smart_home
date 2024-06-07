@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_home/core/helper/constants.dart';
@@ -17,29 +18,25 @@ class Listeddevicesitem extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: padding),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
                 'All devices',
                 style: TextStyles.font18WhiteMedium,
               ),
-              TextButton(
-                style: ButtonStyle(
-                  padding: MaterialStateProperty.all(
-                    EdgeInsets.zero,
-                  ),
-                ),
-                onPressed: () {},
-                child: Text(
-                  'see all',
-                  style: TextStyles.font14GreyMedium,
-                ),
-              )
-            ],
+            )
+                .animate()
+                .fadeIn(
+                  duration: 800.milliseconds,
+                  curve: Curves.easeIn,
+                )
+                .moveX(),
           ),
           Expanded(
             child: ListView.builder(
+              itemCount: context.read<SwitchCubit>().allSensors(),
               itemBuilder: (context, index) {
                 return Card(
                   margin: EdgeInsets.only(bottom: 10.h),
@@ -49,48 +46,64 @@ class Listeddevicesitem extends StatelessWidget {
                   shadowColor: ColorStyles.black,
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: BlocProvider<SwitchCubit>(
-                      create: (context) => SwitchCubit(),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.6,
-                                child: Text(
-                                  'Smoke Detector',
-                                  style: TextStyles.font18WhiteMedium,
-                                ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.6,
+                              child: Text(
+                                context
+                                    .read<SwitchCubit>()
+                                    .getSensorNameByIndex(index),
+                                style: TextStyles.font18WhiteMedium,
                               ),
-                              Text(
-                                'Living Room',
-                                style: TextStyles.font14GreyMedium,
-                              ),
-                            ],
-                          ),
-                          BlocBuilder<SwitchCubit, SwitchState>(
-                            builder: (context, state) {
-                              return Switch(
-                                inactiveTrackColor: ColorStyles.darkGrey,
-                                activeTrackColor: ColorStyles.lightblue,
-                                value: context.read<SwitchCubit>().value,
-                                onChanged: (val) {
-                                  BlocProvider.of<SwitchCubit>(context)
-                                      .switchValue(val);
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      ),
+                            ),
+                            Text(
+                              context
+                                  .read<SwitchCubit>()
+                                  .getRoomNameBySensorIndex(index)!,
+                              style: TextStyles.font14GreyMedium,
+                            ),
+                          ],
+                        ),
+                        BlocBuilder<SwitchCubit, SwitchState>(
+                          builder: (context, state) {
+                            return Switch(
+                              inactiveTrackColor: ColorStyles.darkGrey,
+                              activeTrackColor: ColorStyles.lightblue,
+                              value: context
+                                  .read<SwitchCubit>()
+                                  .getSensorValueByIndex(index),
+                              onChanged: (val) {
+                                BlocProvider.of<SwitchCubit>(context)
+                                    .switchValue(
+                                  val,
+                                  index,
+                                  true,
+                                  context
+                                      .read<SwitchCubit>()
+                                      .getRoomNameBySensorIndex(index)!,
+                                  index,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 );
               },
-              itemCount: 10,
-            ),
+            )
+                .animate()
+                .fadeIn(
+                  duration: 800.milliseconds,
+                  curve: Curves.easeIn,
+                )
+                .moveX(),
           )
         ],
       ),

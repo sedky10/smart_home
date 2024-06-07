@@ -79,7 +79,8 @@ abstract class AppRouter {
             MultiBlocProvider(
           providers: [
             BlocProvider<NavigationCubit>(
-              create: (context) => getIt<NavigationCubit>(),
+              create: (context) =>
+                  getIt<NavigationCubit>()..updateSelectedIndex(0),
             ),
             BlocProvider(
               create: (context) => ProfileDataCubit(getIt<FirebaseServices>()),

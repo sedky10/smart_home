@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:smart_home/core/helper/constants.dart';
@@ -43,16 +44,29 @@ class RegisterView extends StatelessWidget {
             backgroundColor: ColorStyles.blackLight,
             body: Padding(
               padding: EdgeInsets.symmetric(horizontal: padding),
-              child: const SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
                 child: Column(
                   children: [
-                    ImageItem(
+                    const ImageItem(
                       image: ImagesAssets.registerImage,
-                      title: 'Welcom, Register Your Account and Enjoy our Services Now!',
+                      title:
+                          'Welcom, Register Your Account and Enjoy our Services Now!',
                     ),
-                    UserData(),
-                    Registeritem(),
+                    const UserData()
+                        .animate()
+                        .fadeIn(
+                          duration: 800.milliseconds,
+                          curve: Curves.easeIn,
+                        )
+                        .moveX(),
+                    const Registeritem()
+                        .animate()
+                        .fadeIn(
+                          duration: 800.milliseconds,
+                          curve: Curves.easeIn,
+                        )
+                        .moveY(),
                   ],
                 ),
               ),

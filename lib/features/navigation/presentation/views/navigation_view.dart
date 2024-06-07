@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -6,6 +7,7 @@ import 'package:smart_home/core/utils/color_styles.dart';
 import 'package:smart_home/core/utils/text%20styles/text_styles.dart';
 import 'package:smart_home/features/account/presentation/manager/profile%20data/profile_data_cubit.dart';
 import 'package:smart_home/features/account/presentation/views/account_view.dart';
+import 'package:smart_home/features/home/presentation/manager/switch/switch_cubit.dart';
 import 'package:smart_home/features/home/presentation/views/home_view.dart';
 import 'package:smart_home/features/navigation/presentation/manager/cubit/navigation_cubit.dart';
 import 'package:smart_home/features/rooms/presenation/views/rooms.dart';
@@ -32,6 +34,13 @@ class _NavigationViewState extends State<NavigationView> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    BlocProvider.of<NavigationCubit>(context).updateSelectedIndex(0);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<NavigationCubit, NavigationState>(
       builder: (context, state) {
@@ -45,7 +54,13 @@ class _NavigationViewState extends State<NavigationView> {
             title: Text(
               'Smart Home',
               style: TextStyles.font18WhiteBold,
-            ),
+            )
+                .animate()
+                .fadeIn(
+                  duration: 800.milliseconds,
+                  curve: Curves.easeIn,
+                )
+                .moveY(),
           ),
           body: Center(
             child:
@@ -64,10 +79,10 @@ class _NavigationViewState extends State<NavigationView> {
               unselectedItemColor: ColorStyles.grey.withOpacity(.5),
               selectedLabelStyle: TextStyles.font12GreyBold,
               unselectedLabelStyle: TextStyles.font12GreyBold,
-              currentIndex: state is NavigationInitial
-                  ? 0
-                  : BlocProvider.of<NavigationCubit>(context).selectedIndex,
+              currentIndex:
+                  BlocProvider.of<NavigationCubit>(context).selectedIndex,
               onTap: (index) {
+                context.read<SwitchCubit>().allSensors();
                 BlocProvider.of<ProfileDataCubit>(context).getProfileData();
                 BlocProvider.of<NavigationCubit>(context)
                     .updateSelectedIndex(index);

@@ -19,6 +19,7 @@ void setup() {
   getIt.registerSingleton<FirebaseServices>(FirebaseServices());
   getIt.registerSingleton<NavigationCubit>(NavigationCubit());
   getIt.registerSingleton<SwitchCubit>(SwitchCubit());
+  // getIt.registerSingleton<SensorSwitchCubit>(SensorSwitchCubit());
   getIt.registerSingleton<PasswordEyeCubit>(PasswordEyeCubit());
   getIt.registerSingleton<PasswordEyeLoginCubit>(PasswordEyeLoginCubit());
   getIt.registerSingleton<EditProfileCubit>(EditProfileCubit(getIt<FirebaseServices>()));

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -63,7 +64,13 @@ class ProfileActions extends StatelessWidget {
                 },
               );
             },
-          ),
+          )
+              .animate()
+              .fadeIn(
+                duration: 600.milliseconds,
+                curve: Curves.easeIn,
+              )
+              .moveX(),
           SizedBox(
             height: 20.h,
           ),
@@ -81,11 +88,9 @@ class ProfileActions extends StatelessWidget {
                       listener: (context, state) {
                         if (state is LogOutSuccess) {
                           GoRouter.of(context).pop();
+
                           GoRouter.of(context)
-                              .pushReplacement(AppRoutes.kNavigationView);
-                          Future.delayed(const Duration(seconds: 1));
-                          GoRouter.of(context)
-                              .pushReplacement(AppRoutes.kLoginView);
+                              .pushReplacement(AppRoutes.kRegisterView);
                         } else if (state is LogOutFailed) {
                           GoRouter.of(context).pop();
                           showToast(state.message);
@@ -105,15 +110,25 @@ class ProfileActions extends StatelessWidget {
                               Icons.logout,
                               color: ColorStyles.red,
                               size: 50,
-                            ),
+                            ) .animate()
+                              .fadeIn(
+                                duration: 500.milliseconds,
+                                curve: Curves.easeIn,
+                              )
+                              .moveY(),
                             content: Text(
                               'Are you sure you want to log out?',
                               style: TextStyles.font18WhiteMedium,
                               textAlign: TextAlign.center,
-                            ),
+                            ) .animate()
+                              .fadeIn(
+                                duration: 500.milliseconds,
+                                curve: Curves.easeIn,
+                              )
+                              .moveX(),
                             actions: [
                               state is LogOutLoading
-                                  ? const CircularProgressIndicator()
+                                  ? const SizedBox()
                                   : SizedBox(
                                       width: MediaQuery.of(context).size.width *
                                           0.3,
@@ -141,8 +156,19 @@ class ProfileActions extends StatelessWidget {
                                         },
                                       ),
                                     ),
-                            ],
-                          ),
+                            ] .animate()
+                              .fadeIn(
+                                duration: 500.milliseconds,
+                                curve: Curves.easeIn,
+                              )
+                              .moveY(),
+                          )
+                              .animate()
+                              .fadeIn(
+                                duration: 500.milliseconds,
+                                curve: Curves.easeIn,
+                              )
+                              .moveY(),
                         );
                       },
                     ),
@@ -150,7 +176,13 @@ class ProfileActions extends StatelessWidget {
                 },
               );
             },
-          ),
+          )
+              .animate()
+              .fadeIn(
+                duration: 800.milliseconds,
+                curve: Curves.easeIn,
+              )
+              .moveX(),
           SizedBox(
             height: 20.h,
           ),
@@ -173,12 +205,24 @@ class ProfileActions extends StatelessWidget {
                             Icons.delete,
                             color: ColorStyles.red,
                             size: 50,
-                          ),
+                          )
+                              .animate()
+                              .fadeIn(
+                                duration: 500.milliseconds,
+                                curve: Curves.easeIn,
+                              )
+                              .moveY(),
                           content: Text(
                             'Are you sure you want to delete your account?',
                             style: TextStyles.font18WhiteMedium,
                             textAlign: TextAlign.center,
-                          ),
+                          )
+                              .animate()
+                              .fadeIn(
+                                duration: 500.milliseconds,
+                                curve: Curves.easeIn,
+                              )
+                              .moveX(),
                           actions: [
                             state is LogOutLoading
                                 ? const CircularProgressIndicator()
@@ -214,15 +258,33 @@ class ProfileActions extends StatelessWidget {
                                       },
                                     ),
                                   ),
-                          ],
-                        );
+                          ]
+                              .animate()
+                              .fadeIn(
+                                duration: 500.milliseconds,
+                                curve: Curves.easeIn,
+                              )
+                              .moveY(),
+                        )
+                            .animate()
+                            .fadeIn(
+                              duration: 500.milliseconds,
+                              curve: Curves.easeIn,
+                            )
+                            .moveY();
                       },
                     ),
                   );
                 },
               );
             },
-          ),
+          )
+              .animate()
+              .fadeIn(
+                duration: 1000.milliseconds,
+                curve: Curves.easeIn,
+              )
+              .moveX(),
         ],
       ),
     );
