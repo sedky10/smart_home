@@ -38,6 +38,7 @@ class _SplashScreenState extends State<SplashScreen>
       future: Future.delayed(
         const Duration(milliseconds: 3000),
         () {
+
           if (_auth.currentUser != null) {
             GoRouter.of(context).pushReplacement(AppRoutes.kNavigationView);
           } else {
@@ -60,10 +61,9 @@ class _SplashScreenState extends State<SplashScreen>
                   children: [
                     Image.asset(
                       ImagesAssets.appLogo,
-                      width: MediaQuery.of(context).size.width-50,
-                      height: MediaQuery.of(context).size.height/3,
+                      width: MediaQuery.of(context).size.width - 50,
+                      height: MediaQuery.of(context).size.height / 3,
                     ),
-                   
                     Text(
                       'Smart Home',
                       style: TextStyle(

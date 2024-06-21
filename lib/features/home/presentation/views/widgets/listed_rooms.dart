@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smart_home/core/helper/constants.dart';
 import 'package:smart_home/core/helper/sensors_data.dart';
@@ -60,8 +61,8 @@ class ListedroomsItem extends StatelessWidget {
                         child: Image.asset(
                           roomsImages[index],
                           fit: BoxFit.cover,
-                          height: 100,
-                          width: 130,
+                          height: 100.h,
+                          width: 130.w,
                         ),
                       ),
                       Padding(

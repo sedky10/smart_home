@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smart_home/core/utils/color_styles.dart';
 import 'package:smart_home/features/home/presentation/views/widgets/listed_devices.dart';

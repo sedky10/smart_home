@@ -10,8 +10,10 @@ import 'package:smart_home/features/account/presentation/manager/delete%20accoun
 import 'package:smart_home/features/account/presentation/manager/edit%20profile/edit_profile_cubit.dart';
 import 'package:smart_home/features/account/presentation/manager/logout/log_out_cubit.dart';
 import 'package:smart_home/features/account/presentation/manager/profile%20data/profile_data_cubit.dart';
+import 'package:smart_home/features/home/presentation/manager/bluetooth%20connnect/bluetooth_connect_cubit.dart';
 import 'package:smart_home/features/home/presentation/manager/switch/switch_cubit.dart';
 import 'package:smart_home/features/navigation/presentation/manager/cubit/navigation_cubit.dart';
+import 'package:smart_home/features/rooms/presenation/manager/bluetooth%20connection/bluetooth_connection_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -19,8 +21,9 @@ void setup() {
   getIt.registerSingleton<FirebaseServices>(FirebaseServices());
   getIt.registerSingleton<NavigationCubit>(NavigationCubit());
   getIt.registerSingleton<SwitchCubit>(SwitchCubit());
-  // getIt.registerSingleton<SensorSwitchCubit>(SensorSwitchCubit());
+  getIt.registerSingleton<BluetoothConnectionCubit>(BluetoothConnectionCubit());
   getIt.registerSingleton<PasswordEyeCubit>(PasswordEyeCubit());
+  getIt.registerSingleton<BluetoothConnectCubit>(BluetoothConnectCubit());
   getIt.registerSingleton<PasswordEyeLoginCubit>(PasswordEyeLoginCubit());
   getIt.registerSingleton<EditProfileCubit>(EditProfileCubit(getIt<FirebaseServices>()));
   getIt.registerSingleton<DeleteAccountCubit>(DeleteAccountCubit(getIt<FirebaseServices>()));

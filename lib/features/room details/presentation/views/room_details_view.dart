@@ -133,17 +133,6 @@ class RoomDetailsView extends StatelessWidget {
             ],
           ),
         ),
-        floatingActionButton: Container(
-          margin: EdgeInsets.all( 30.sp),
-          alignment: Alignment.bottomCenter,
-          child: FloatingActionButton(
-            onPressed: () {},
-            backgroundColor: ColorStyles.lightblue,
-            child: Icon(
-              Icons.mic,
-              size: 30.sp,
-            ),
-          ),
-        ));
+       );
   }
 }

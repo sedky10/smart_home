@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:smart_home/core/utils/color_styles.dart';
 import 'package:smart_home/core/utils/text%20styles/text_styles.dart';
 import 'package:smart_home/features/account/presentation/manager/profile%20data/profile_data_cubit.dart';
@@ -25,12 +29,51 @@ class _NavigationViewState extends State<NavigationView> {
   void initState() {
     _pages = [
       {'page': const Homeview(), 'title': 'home'},
-      {'page': const RoomsView(), 'title': 'Rooms'},
+      {'page': const RoomsView(), 'title': 'Connection'},
       {'page': const AccountView(), 'title': 'Profile'},
     ];
     BlocProvider.of<ProfileDataCubit>(context).getProfileData();
-
+    check();
     super.initState();
+  }
+
+  check() async {
+    PermissionStatus bluetoothStatus = await Permission.bluetoothScan.request();
+    if (bluetoothStatus.isGranted) {
+      // Either the permission was already granted before or the user just granted it.
+      openBlue();
+    }
+  }
+
+  openBlue() async {
+    // first, check if bluetooth is supported by your hardware
+// Note: The platform is initialized on the first call to any FlutterBluePlus method.
+    if (await FlutterBluePlus.isSupported == false) {
+      print("Bluetooth not supported by this device");
+      return;
+    }
+
+// handle bluetooth on & off
+// note: for iOS the initial state is typically BluetoothAdapterState.unknown
+// note: if you have permissions issues you will get stuck at BluetoothAdapterState.unauthorized
+    var subscription =
+        FlutterBluePlus.adapterState.listen((BluetoothAdapterState state) {
+      print(state);
+      if (state == BluetoothAdapterState.on) {
+        // usually start scanning, connecting, etc
+      } else {
+        // show an error to the user, etc
+      }
+    });
+
+// turn on bluetooth ourself if we can
+// for iOS, the user controls bluetooth enable/disable
+    if (Platform.isAndroid) {
+      await FlutterBluePlus.turnOn();
+    }
+
+// cancel to prevent duplicate listeners
+    subscription.cancel();
   }
 
   @override
@@ -102,7 +145,7 @@ class _NavigationViewState extends State<NavigationView> {
                   ),
                 ),
                 BottomNavigationBarItem(
-                  label: 'Rooms',
+                  label: 'Connection',
                   icon: Padding(
                     padding: EdgeInsets.all(10.sp),
                     child: Icon(
