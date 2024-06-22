@@ -8,6 +8,7 @@ import 'package:smart_home/core/helper/constants.dart';
 import 'package:smart_home/core/utils/color_styles.dart';
 import 'package:smart_home/core/utils/text%20styles/text_styles.dart';
 import 'package:smart_home/features/home/presentation/manager/switch/switch_cubit.dart';
+import 'package:smart_home/features/rooms/presenation/manager/connect%20device/connect_device_cubit.dart';
 
 class Listeddevicesitem extends StatelessWidget {
   const Listeddevicesitem({super.key});
@@ -87,6 +88,7 @@ class Listeddevicesitem extends StatelessWidget {
                                       .read<SwitchCubit>()
                                       .getRoomNameBySensorIndex(index)!,
                                   index,
+                                  context.read<ConnectDeviceCubit>().connection,
                                 );
                               },
                             );

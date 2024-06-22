@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:smart_home/core/helper/function/toast.dart';
 import 'package:smart_home/core/helper/sensors_data.dart';
 part 'switch_state.dart';
 
@@ -9,14 +14,24 @@ class SwitchCubit extends Cubit<SwitchState> {
   String roomName = '';
   int roomIndex = 0;
 
-  switchValue(
-      bool val, int index, bool home, String roomNName, int roomIIndex) {
+  switchValue(bool val, int index, bool home, String roomNName, int roomIIndex,
+      BluetoothConnection _connection) {
     emit(SwitchInitial());
     if (home) {
       roomsData[getRoomIndexBySensorIndex(roomIIndex)]['sensors']
           [getSensorIndexInRoomBySensorIndex(index)]['value'] = val;
+      sendChar(val
+          ? roomsData[getRoomIndexBySensorIndex(roomIIndex)]['sensors']
+              [getSensorIndexInRoomBySensorIndex(index)]['Opencode']
+          : roomsData[getRoomIndexBySensorIndex(roomIIndex)]['sensors']
+              [getSensorIndexInRoomBySensorIndex(index)]['Closecode'], _connection);
     } else {
       roomsData[roomIIndex]['sensors'][index]['value'] = val;
+      val
+          ? sendChar(
+              roomsData[roomIIndex]['sensors'][index]['Opencode'], _connection)
+          : sendChar(roomsData[roomIIndex]['sensors'][index]['Closecode'],
+              _connection);
     }
     emit(SwitchChange());
   }
@@ -95,5 +110,25 @@ class SwitchCubit extends Cubit<SwitchState> {
     }
 
     throw RangeError('Sensor index out of range');
+  }
+
+  void sendChar(String char, BluetoothConnection _connection) async {
+    if (_connection.isConnected) {
+      try {
+        _connection.output.add(Uint8List.fromList(utf8.encode(char)));
+        await _connection.output.allSent;
+        print(
+            '111111111111111111111111111111111111111122222222222222222222222222222222222222222111111111111111111111111111111111111111111111111111111111111');
+        print(Uint8List.fromList(utf8.encode(char)));
+        showToast('sensor value changed');
+      } catch (e) {
+        print('33333333333333333333333333333333333');
+        print(e);
+        showToast(e.toString());
+      }
+    } else {
+      print('No active connection');
+      showToast('No active connection');
+    }
   }
 }

@@ -1,59 +1,69 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 part 'bluetooth_connection_state.dart';
 
 class BluetoothConnectionCubit extends Cubit<BluetoothConnectionSState> {
   BluetoothConnectionCubit() : super(BluetoothConnectionInitial());
+  
+  List<BluetoothDiscoveryResult> _scanResults = [];
+  List<BluetoothDiscoveryResult> get results => _scanResults;
+  bool _isScanning = false;
+  bool get isScanning => _isScanning;
+  
+  StreamSubscription<BluetoothDiscoveryResult>? _discoveryStreamSubscription;
 
   Future<void> checkPermissions() async {
     if (await Permission.location.isDenied) {
       await Permission.location.request();
     }
-    if (await Permission.bluetoothScan.isDenied) {
-      await Permission.bluetoothScan.request();
-    }
-    
   }
 
   void startScan() async {
+    await checkPermissions();
+    _scanResults.clear();
+    _isScanning = true;
     emit(BluetoothScanning());
 
-    // Ensure Bluetooth is on and permissions are granted
-    await FlutterBluePlus.adapterState
-        .where((s) => s == BluetoothAdapterState.on)
-        .first;
+    // Ensure Bluetooth is on
+    FlutterBluetoothSerial.instance.state.then((state) {
+      // if (state != BluetoothState.STATE_ON) {
+      //   emit(BluetoothScanError('Bluetooth is not turned on'));
+      //   return;
+      // }
 
-    // Check for any already connected system devices
-    List<BluetoothDevice> systemDevices = await FlutterBluePlus.systemDevices;
-    for (var d in systemDevices) {
-      print('${d.platformName} already connected to! ${d.remoteId}');
-    }
+    });
+    
+    
 
-    // Listen to scan results
-    var subscription = FlutterBluePlus.onScanResults.listen((results) {
-      emit(BluetoothScanResults(results));
-    }, onError: (e) => emit(BluetoothScanError(e.toString())));
+    // Stop any ongoing discovery
+    _discoveryStreamSubscription?.cancel();
 
-    // Cleanup: cancel subscription when scanning stops
-    FlutterBluePlus.cancelWhenScanComplete(subscription);
-
-    // Start scanning without filters
-    await FlutterBluePlus.startScan(
-      androidUsesFineLocation: true,
-      timeout: Duration(seconds: 15),
-    );
+    // Start scanning
+    _discoveryStreamSubscription = FlutterBluetoothSerial.instance.startDiscovery().listen((result) {
+      _scanResults.add(result);
+    
+    }, onError: (e) {
+      emit(BluetoothScanError(e.toString()));
+    });
 
     // Wait for scanning to stop
-    await FlutterBluePlus.isScanning.where((val) => val == false).first;
-
-    emit(BluetoothScanComplete());
+    await Future.delayed(const Duration(seconds: 5));
+      emit(BluetoothScanComplete());
+    await _discoveryStreamSubscription!.cancel();
+    
+    _isScanning = false;
+  
   }
 
-  void stopScan() async {
-    await FlutterBluePlus.stopScan();
-    emit(BluetoothScanComplete());
+  @override
+  Future<void> close() {
+    _discoveryStreamSubscription?.cancel();
+    return super.close();
   }
 }

@@ -7,6 +7,8 @@ import 'package:smart_home/core/routing/app_router.dart';
 import 'package:smart_home/core/utils/app_theme.dart';
 import 'package:smart_home/features/home/presentation/manager/bluetooth%20connnect/bluetooth_connect_cubit.dart';
 import 'package:smart_home/features/home/presentation/manager/switch/switch_cubit.dart';
+import 'package:smart_home/features/rooms/presenation/manager/bluetooth%20connection/bluetooth_connection_cubit.dart';
+import 'package:smart_home/features/rooms/presenation/manager/connect%20device/connect_device_cubit.dart';
 import 'package:smart_home/firebase_options.dart';
 
 void main() async {
@@ -32,6 +34,12 @@ class SmartHome extends StatelessWidget {
           ),
           BlocProvider<BluetoothConnectCubit>(
             create: (context) => BluetoothConnectCubit(),
+          ),
+          BlocProvider<BluetoothConnectionCubit>(
+            create: (context) => BluetoothConnectionCubit(),
+          ),
+          BlocProvider<ConnectDeviceCubit>(
+            create: (context) => ConnectDeviceCubit(),
           ),
           // BlocProvider<SensorSwitchCubit>(
           //   create: (context) => SensorSwitchCubit(),

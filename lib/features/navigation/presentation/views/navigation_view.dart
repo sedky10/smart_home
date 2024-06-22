@@ -7,6 +7,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:smart_home/core/helper/function/toast.dart';
 import 'package:smart_home/core/utils/color_styles.dart';
 import 'package:smart_home/core/utils/text%20styles/text_styles.dart';
 import 'package:smart_home/features/account/presentation/manager/profile%20data/profile_data_cubit.dart';
@@ -33,6 +34,7 @@ class _NavigationViewState extends State<NavigationView> {
       {'page': const AccountView(), 'title': 'Profile'},
     ];
     BlocProvider.of<ProfileDataCubit>(context).getProfileData();
+
     check();
     super.initState();
   }
@@ -50,6 +52,7 @@ class _NavigationViewState extends State<NavigationView> {
 // Note: The platform is initialized on the first call to any FlutterBluePlus method.
     if (await FlutterBluePlus.isSupported == false) {
       print("Bluetooth not supported by this device");
+      showToast('Bluetooth not supported by this device');
       return;
     }
 

@@ -10,7 +10,7 @@ sealed class BluetoothConnectionSState extends Equatable {
 final class BluetoothConnectionInitial extends BluetoothConnectionSState {}
 final class BluetoothScanning  extends BluetoothConnectionSState {}
 final class BluetoothScanResults  extends BluetoothConnectionSState {
-   final List<ScanResult> results;
+   final List results;
 
   const BluetoothScanResults(this.results);
 }

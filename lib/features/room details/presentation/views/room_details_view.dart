@@ -12,6 +12,7 @@ import 'package:smart_home/core/helper/sensors_data.dart';
 import 'package:smart_home/core/utils/color_styles.dart';
 import 'package:smart_home/core/utils/text%20styles/text_styles.dart';
 import 'package:smart_home/features/home/presentation/manager/switch/switch_cubit.dart';
+import 'package:smart_home/features/rooms/presenation/manager/connect%20device/connect_device_cubit.dart';
 
 class RoomDetailsView extends StatelessWidget {
   const RoomDetailsView({super.key});
@@ -112,6 +113,7 @@ class RoomDetailsView extends StatelessWidget {
                                       false,
                                       context.read<SwitchCubit>().roomName,
                                       context.read<SwitchCubit>().roomIndex,
+                                      context.read<ConnectDeviceCubit>().connection,
                                     );
                                   },
                                 );

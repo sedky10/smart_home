@@ -14,6 +14,7 @@ import 'package:smart_home/features/home/presentation/manager/bluetooth%20connne
 import 'package:smart_home/features/home/presentation/manager/switch/switch_cubit.dart';
 import 'package:smart_home/features/navigation/presentation/manager/cubit/navigation_cubit.dart';
 import 'package:smart_home/features/rooms/presenation/manager/bluetooth%20connection/bluetooth_connection_cubit.dart';
+import 'package:smart_home/features/rooms/presenation/manager/connect%20device/connect_device_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -22,6 +23,7 @@ void setup() {
   getIt.registerSingleton<NavigationCubit>(NavigationCubit());
   getIt.registerSingleton<SwitchCubit>(SwitchCubit());
   getIt.registerSingleton<BluetoothConnectionCubit>(BluetoothConnectionCubit());
+  getIt.registerSingleton<ConnectDeviceCubit>(ConnectDeviceCubit());
   getIt.registerSingleton<PasswordEyeCubit>(PasswordEyeCubit());
   getIt.registerSingleton<BluetoothConnectCubit>(BluetoothConnectCubit());
   getIt.registerSingleton<PasswordEyeLoginCubit>(PasswordEyeLoginCubit());

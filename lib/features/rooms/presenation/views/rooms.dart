@@ -1,164 +1,206 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:smart_home/core/helper/constants.dart';
-import 'package:smart_home/core/helper/image_assets.dart';
 import 'package:smart_home/core/utils/color_styles.dart';
 import 'package:smart_home/core/utils/text%20styles/text_styles.dart';
+import 'package:smart_home/features/rooms/presenation/manager/bluetooth%20connection/bluetooth_connection_cubit.dart';
+import 'package:smart_home/features/rooms/presenation/manager/connect%20device/connect_device_cubit.dart';
 
-class RoomsView extends StatefulWidget {
+class RoomsView extends StatelessWidget {
   const RoomsView({super.key});
 
   @override
-  State<RoomsView> createState() => _RoomsViewState();
-}
-
-class _RoomsViewState extends State<RoomsView> {
-  List<ScanResult> scanResults = [];
-  bool isScanning = false;
-
-  @override
-  void initState() {
-    super.initState();
-    checkPermissions();
-  }
-
-  void checkPermissions() async {
-    if (await Permission.location.isDenied) {
-      await Permission.location.request();
-    }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    FlutterBluePlus.stopScan();
-  }
-
-  void startScan() async {
-    setState(() {
-      scanResults.clear();
-      isScanning = true;
-    });
-
-    // Ensure Bluetooth is on and permissions are granted
-    await FlutterBluePlus.adapterState
-        .where((s) => s == BluetoothAdapterState.on)
-        .first;
-
-    // Check for any already connected system devices
-    List<BluetoothDevice> systemDevices = await FlutterBluePlus.systemDevices;
-    for (var d in systemDevices) {
-      print('${d.platformName} already connected to! ${d.remoteId}');
-    }
-
-    // Listen to scan results
-    var subscription = FlutterBluePlus.onScanResults.listen((results) {
-      setState(() {
-        print('Found ${results.length} devices!');
-        scanResults = results;
-      });
-    }, onError: (e) => print(e));
-
-    // Cleanup: cancel subscription when scanning stops
-    FlutterBluePlus.cancelWhenScanComplete(subscription);
-
-    // Start scanning without filters
-    await FlutterBluePlus.startScan(
-      androidUsesFineLocation: true,
-      timeout: Duration(seconds: 15),
-    );
-
-    // Wait for scanning to stop
-    await FlutterBluePlus.isScanning.where((val) => val == false).first;
-
-    setState(() {
-      isScanning = false;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorStyles.blackLight,
-      appBar: AppBar(
-        backgroundColor: ColorStyles.blackLight,
-        title: Text('Scan Device', style: TextStyles.font18WhiteMedium),
-        actions: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 35.0.w),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      isScanning ? ColorStyles.blue : ColorStyles.red),
-              onPressed: isScanning
-                  ? null
-                  : () async {
-                      PermissionStatus bluetoothStatus =
-                          await Permission.bluetoothScan.request();
-                      if (bluetoothStatus.isGranted) {
-                        startScan();
-                        // Either the permission was already granted before or the user just granted it.
-                      }
-                    },
-              child: Text(isScanning ? 'Scanning...' : 'Start Scan',
-                  style: TextStyles.font14WhiteBold),
+    return BlocBuilder<ConnectDeviceCubit, ConnectDeviceState>(
+      builder: (context, state) {
+        if (state is ConnectDeviceSuccess) {
+          return Scaffold(
+            backgroundColor: ColorStyles.blackLight,
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                    child: Text('you\'are Connected to A device',
+                        style: TextStyles.font18WhiteMedium)),
+                SizedBox(height: 20.0.h),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: ColorStyles.red),
+                  child: Text('Disconnect', style: TextStyles.font14WhiteBold),
+                  onPressed: () {
+                    BlocProvider.of<ConnectDeviceCubit>(context)
+                        .disconnectDevice();
+                  },
+                ),
+              ],
             ),
+          );
+        }
+        return Scaffold(
+          backgroundColor: ColorStyles.blackLight,
+          appBar: AppBar(
+            backgroundColor: ColorStyles.blackLight,
+            title: Text('Scan Device', style: TextStyles.font18WhiteMedium),
+            actions: [
+              BlocBuilder<BluetoothConnectionCubit, BluetoothConnectionSState>(
+                builder: (context, state) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 35.0.w),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: state is BluetoothScanning
+                              ? ColorStyles.blue
+                              : ColorStyles.red),
+                      onPressed: state is BluetoothScanning
+                          ? null
+                          : () async {
+                              PermissionStatus bluetoothStatus =
+                                  await Permission.bluetoothScan.request();
+                              if (bluetoothStatus.isGranted) {
+                                context
+                                    .read<BluetoothConnectionCubit>()
+                                    .startScan();
+                                // Either the permission was already granted before or the user just granted it.
+                              }
+                            },
+                      child: Text(
+                        state is BluetoothScanning
+                            ? 'Scanning...'
+                            : 'Start Scan',
+                        style: TextStyles.font14WhiteBold,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          scanResults.isNotEmpty
-              ? Expanded(
-                  child: ListView.builder(
-                    itemCount: scanResults.length,
-                    itemBuilder: (context, index) {
-                      final result = scanResults[index];
-                      return Padding(
-                        padding: EdgeInsets.all(padding),
-                        child: ListTile(
-                          title: Text(
-                            result.device.remoteId.toString(),
-                            style: TextStyles.font14WhiteBold,
-                          ),
-                          subtitle: Text(
-                            result.device.advName ?? 'Unknown',
-                            style: TextStyles.font14GreyMedium,
-                          ),
-                          trailing: const Icon(
-                            FontAwesomeIcons.bluetooth,
-                            color: ColorStyles.white,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                )
-              : Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        FontAwesomeIcons.bluetooth,
-                        size: 100.0.sp,
-                        color: ColorStyles.lightblue,
+          body:
+              BlocBuilder<BluetoothConnectionCubit, BluetoothConnectionSState>(
+            builder: (context, state) {
+              if (state is BluetoothScanning) {
+                return const Center(
+                    child: CircularProgressIndicator(
+                  color: ColorStyles.lightblue,
+                ));
+              } else if (state is BluetoothScanError) {
+                return const Center(
+                  child: Text('error'),
+                );
+              } else if (state is BluetoothScanComplete) {
+                return Column(
+                  children: [
+                    context.read<BluetoothConnectionCubit>().results.isNotEmpty
+                        ? Expanded(
+                            child: ListView.builder(
+                              itemCount: context
+                                  .read<BluetoothConnectionCubit>()
+                                  .results
+                                  .length,
+                              itemBuilder: (context, index) {
+                                final result = context
+                                    .read<BluetoothConnectionCubit>()
+                                    .results[index];
+                                return Padding(
+                                  padding: EdgeInsets.all(padding),
+                                  child: ListTile(
+                                    title: Text(
+                                      result.device.name.toString(),
+                                      style: TextStyles.font14WhiteBold,
+                                    ),
+                                    subtitle: Text(
+                                      result.device.address.toString() ??
+                                          'Unknown',
+                                      style: TextStyles.font14GreyMedium,
+                                    ),
+                                    // leading: const Icon(
+                                    //   FontAwesomeIcons.bluetooth,
+                                    //   color: ColorStyles.white,
+                                    // ),
+                                    trailing: BlocBuilder<ConnectDeviceCubit,
+                                        ConnectDeviceState>(
+                                      builder: (context, state) {
+                                        return ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  state is ConnectDeviceWaiting
+                                                      ? ColorStyles.darkGrey
+                                                      : ColorStyles.blue),
+                                          onPressed:
+                                              state is ConnectDeviceWaiting
+                                                  ? null
+                                                  : () {
+                                                      BlocProvider.of<
+                                                                  ConnectDeviceCubit>(
+                                                              context)
+                                                          .connectDevice(
+                                                              result.device);
+                                                    },
+                                          child: Text(
+                                            state is ConnectDeviceWaiting
+                                                ? 'connecting..'
+                                                : 'connect',
+                                            style: TextStyles.font14WhiteBold,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        : Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  FontAwesomeIcons.bluetooth,
+                                  size: 100.0.sp,
+                                  color: ColorStyles.lightblue,
+                                ),
+                                SizedBox(height: 30.0.h),
+                                Center(
+                                  child: Text(
+                                    'No devices found.......',
+                                    style: TextStyles.font20WhiteMedium,
+                                  ),
+                                ),
+                                SizedBox(height: 50.0.h),
+                              ],
+                            ),
+                          )
+                  ],
+                );
+              }
+              return Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      FontAwesomeIcons.bluetooth,
+                      size: 100.0.sp,
+                      color: ColorStyles.darkGrey,
+                    ),
+                    SizedBox(height: 30.0.h),
+                    Center(
+                      child: Text(
+                        'start Scan to Find Devices',
+                        style: TextStyles.font20WhiteMedium,
                       ),
-                      SizedBox(height: 30.0.h),
-                      Center(
-                        child: Text(
-                          'No devices found.......',
-                          style: TextStyles.font20WhiteMedium,
-                        ),
-                      ),
-                      SizedBox(height: 50.0.h),
-                    ],
-                  ),
-                )
-        ],
-      ),
+                    ),
+                    SizedBox(height: 50.0.h),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
