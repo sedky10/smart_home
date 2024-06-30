@@ -119,19 +119,6 @@ class FirebaseServices {
     }
   }
 
-  // Future<Map<String, dynamic>?>? getUserData() async {
-  //   try {
-  //     final user = _auth.currentUser;
-  //     return await _firestore
-  //         .collection(userCollection)
-  //         .where('email', isEqualTo: user!.email).get().then((value) =>
-  //           value.docs.first.data());
-  //   } on Exception catch (e) {
-  //     print(e);
-  //     return null;
-  //   }
-  // }
-
   Future<void> editProfile(String userName, String phoneNumber, String email,
       String lastName) async {
     try {

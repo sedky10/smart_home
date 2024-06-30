@@ -20,11 +20,14 @@ class SwitchCubit extends Cubit<SwitchState> {
     if (home) {
       roomsData[getRoomIndexBySensorIndex(roomIIndex)]['sensors']
           [getSensorIndexInRoomBySensorIndex(index)]['value'] = val;
-      sendChar(val
-          ? roomsData[getRoomIndexBySensorIndex(roomIIndex)]['sensors']
-              [getSensorIndexInRoomBySensorIndex(index)]['Opencode']
-          : roomsData[getRoomIndexBySensorIndex(roomIIndex)]['sensors']
-              [getSensorIndexInRoomBySensorIndex(index)]['Closecode'], _connection);
+      sendChar(
+        val
+            ? roomsData[getRoomIndexBySensorIndex(roomIIndex)]['sensors']
+                [getSensorIndexInRoomBySensorIndex(index)]['Opencode']
+            : roomsData[getRoomIndexBySensorIndex(roomIIndex)]['sensors']
+                [getSensorIndexInRoomBySensorIndex(index)]['Closecode'],
+        _connection,
+      );
     } else {
       roomsData[roomIIndex]['sensors'][index]['value'] = val;
       val
@@ -117,17 +120,12 @@ class SwitchCubit extends Cubit<SwitchState> {
       try {
         _connection.output.add(Uint8List.fromList(utf8.encode(char)));
         await _connection.output.allSent;
-        print(
-            '111111111111111111111111111111111111111122222222222222222222222222222222222222222111111111111111111111111111111111111111111111111111111111111');
-        print(Uint8List.fromList(utf8.encode(char)));
+
         showToast('sensor value changed');
       } catch (e) {
-        print('33333333333333333333333333333333333');
-        print(e);
         showToast(e.toString());
       }
     } else {
-      print('No active connection');
       showToast('No active connection');
     }
   }
