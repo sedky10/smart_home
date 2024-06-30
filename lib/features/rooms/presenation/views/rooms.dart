@@ -167,6 +167,7 @@ class RoomsView extends StatelessWidget {
                               : Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
+                                  SizedBox(height: 200.0.h),
                                   Icon(
                                     FontAwesomeIcons.bluetooth,
                                     size: 100.0.sp,

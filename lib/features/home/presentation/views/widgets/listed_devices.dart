@@ -85,7 +85,7 @@ class Listeddevicesitem extends StatelessWidget {
                                   index,
                                   true,
                                   context
-                                      .read<SwitchCubit>()
+                                      .read<SwitchCubit>() 
                                       .getRoomNameBySensorIndex(index)!,
                                   index,
                                   context.read<ConnectDeviceCubit>().connection,

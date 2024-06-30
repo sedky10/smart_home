@@ -11,33 +11,22 @@ final List<String> roomsImages = [
 ];
 final List<Icon> sensorsIcons = [
   Icon(Icons.thermostat, color: Colors.lightBlue, size: 60.sp),
-  Icon(Icons.water_damage, color: Colors.lightBlue, size: 60.sp),
+  Icon(Icons.gas_meter, color: Colors.lightBlue, size: 60.sp),
   Icon(Icons.motion_photos_on, color: Colors.lightBlue, size: 60.sp),
   Icon(Icons.smoke_free, color: Colors.lightBlue, size: 60.sp),
+  Icon(Icons.local_fire_department, color: Colors.lightBlue, size: 60.sp),
 ];
+
+bool motionValue = false;
 List<Map<String, dynamic>> rooms = [
   {
     'name': 'BedRoom',
     'image': roomsImages[0],
     'sensors': [
       {
-        'name': 'Humidity',
-        'icon': sensorsIcons[1],
-        'value': false,
-        'Opencode': 'o',
-        'Closecode': 'f',
-      },
-      {
         'name': 'Motion',
         'icon': sensorsIcons[2],
-        'value': false,
-        'Opencode': 'o',
-        'Closecode': 'f',
-      },
-      {
-        'name': 'Smoke',
-        'icon': sensorsIcons[3],
-        'value': false,
+        'value': motionValue,
         'Opencode': 'o',
         'Closecode': 'f',
       },
@@ -48,16 +37,9 @@ List<Map<String, dynamic>> rooms = [
     'image': roomsImages[1],
     'sensors': [
       {
-        'name': 'Humidity',
-        'icon': sensorsIcons[1],
-        'value': false,
-        'Opencode': 'o',
-        'Closecode': 'f',
-      },
-      {
         'name': 'Motion',
         'icon': sensorsIcons[2],
-        'value': false,
+        'value': motionValue,
         'Opencode': 'o',
         'Closecode': 'f',
       },
@@ -65,8 +47,8 @@ List<Map<String, dynamic>> rooms = [
         'name': 'Smoke',
         'icon': sensorsIcons[3],
         'value': false,
-        'Opencode': 'o',
-        'Closecode': 'f',
+        'Opencode': 'a',
+        'Closecode': 'z',
       },
     ],
   },
@@ -75,23 +57,16 @@ List<Map<String, dynamic>> rooms = [
     'image': roomsImages[2],
     'sensors': [
       {
-        'name': 'Humidity',
-        'icon': sensorsIcons[1],
+        'name': 'Temperature',
+        'icon': sensorsIcons[0],
         'value': false,
-        'Opencode': 'o',
-        'Closecode': 'f',
+        'Opencode': 'm',
+        'Closecode': 'l',
       },
       {
         'name': 'Motion',
         'icon': sensorsIcons[2],
-        'value': false,
-        'Opencode': 'o',
-        'Closecode': 'f',
-      },
-      {
-        'name': 'Smoke',
-        'icon': sensorsIcons[3],
-        'value': false,
+        'value': motionValue,
         'Opencode': 'o',
         'Closecode': 'f',
       },
@@ -102,32 +77,25 @@ List<Map<String, dynamic>> rooms = [
     'image': roomsImages[3],
     'sensors': [
       {
-        'name': 'Temperature',
-        'icon': sensorsIcons[0],
+        'name': 'Fire',
+        'icon': sensorsIcons[4],
         'value': false,
-        'Opencode': 'o',
-        'Closecode': 'f',
-      },
-      {
-        'name': 'Humidity',
-        'icon': sensorsIcons[1],
-        'value': false,
-        'Opencode': 'o',
-        'Closecode': 'f',
+        'Opencode': 'a',
+        'Closecode': 'z',
       },
       {
         'name': 'Motion',
         'icon': sensorsIcons[2],
-        'value': false,
+        'value': motionValue,
         'Opencode': 'o',
         'Closecode': 'f',
       },
       {
-        'name': 'Smoke',
-        'icon': sensorsIcons[3],
+        'name': 'Gas',
+        'icon': sensorsIcons[1],
         'value': false,
-        'Opencode': 'o',
-        'Closecode': 'f',
+        'Opencode': 'x',
+        'Closecode': 'q',
       },
     ],
   },
@@ -152,6 +120,3 @@ List<Map<String, dynamic>> rooms = [
     ],
   },
 ];
-
-
-

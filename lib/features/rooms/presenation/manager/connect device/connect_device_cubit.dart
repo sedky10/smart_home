@@ -7,7 +7,7 @@ part 'connect_device_state.dart';
 
 class ConnectDeviceCubit extends Cubit<ConnectDeviceState> {
   BluetoothConnection? _cconnection;
-  get connection => _cconnection;
+  get  connection => _cconnection;
 
   ConnectDeviceCubit() : super(ConnectDeviceInitial());
   void connectDevice(BluetoothDevice device) async {
